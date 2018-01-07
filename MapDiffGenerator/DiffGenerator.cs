@@ -55,6 +55,8 @@ namespace MapDiffGenerator
         internal class DiffData
         {
             public EditType EditType;
+
+            [JsonConverter(typeof(PropertyCollectionConverter))]
             public IPropertyCollection Properties;
         }
 
@@ -115,10 +117,8 @@ namespace MapDiffGenerator
 
             Diff diff = new Diff();
             diff.Map = GetMapData();
-            string data = JsonConvert.SerializeObject(diff);
-            
-            //Console.WriteLine(data);
-            // TODO: write to dest path
+            // TEMP: Indented for viewing data in debug
+            string data = JsonConvert.SerializeObject(diff, Formatting.Indented);
             File.WriteAllText("diff.json", data);
         }
 
