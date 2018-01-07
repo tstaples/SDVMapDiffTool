@@ -117,8 +117,9 @@ namespace MapDiffGenerator
             diff.Map = GetMapData();
             string data = JsonConvert.SerializeObject(diff);
             
-            Console.WriteLine(data);
+            //Console.WriteLine(data);
             // TODO: write to dest path
+            File.WriteAllText("diff.json", data);
         }
 
         private Diff.MapData GetMapData()
@@ -151,6 +152,7 @@ namespace MapDiffGenerator
                         TileSize = tileSheet.SheetSize
                     };
 
+                    Console.WriteLine($"Adding tilesheet: {tileSheet.Id}");
                     tileSheets.Add(tileSheetData);
                 }
             }
@@ -163,8 +165,12 @@ namespace MapDiffGenerator
             foreach (Layer layer in this.ModifiedMap.Layers)
             {
                 Layer referenceLayer = this.ReferenceMap.Layers.FirstOrDefault(l => l.Id == layer.Id);
-                if (referenceLayer == null || DoLayersDiffer(layer, referenceLayer))
+                Diff.TileData[] tileData = GetTileData(layer, referenceLayer);
+
+                if (referenceLayer == null || DoLayersDiffer(layer, referenceLayer) || tileData != null)
                 {
+                    Console.WriteLine($"Adding layer: {layer.Id}");
+
                     layerData.Add(new Diff.LayerData()
                     {
                         EditType = referenceLayer == null ? EditType.Add : EditType.Merge,
@@ -173,11 +179,66 @@ namespace MapDiffGenerator
                         Visible = layer.Visible,
                         LayerSize = layer.LayerSize,
                         TileSize = layer.TileSize,
-                        //Tiles = GetTileData(layer, referenceLayer) // if the ref layer is null, all are add. otherwise only return the tiles ref layer doesn't have.
+                        Tiles = tileData
                     });
                 }
             }
             return layerData.Count > 0 ? layerData.ToArray() : null;
+        }
+
+        private Diff.TileData[] GetTileData(Layer modifiedLayer, Layer referenceLayer)
+        {
+            List<Diff.TileData> tiles = new List<Diff.TileData>();
+
+            Tile GetReferenceTile(int tileX, int tileY)
+            {
+                if (referenceLayer != null && tileX < referenceLayer.TileWidth && tileY < referenceLayer.TileHeight)
+                {
+                    return referenceLayer.Tiles[tileX, tileY];
+                }
+                return null;
+            }
+
+            for (int y = 0; y < modifiedLayer.TileHeight; ++y)
+            {
+                for (int x = 0; x < modifiedLayer.TileWidth; ++x)
+                {
+                    Tile modifiedTile = modifiedLayer.Tiles[x, y];
+                    Tile referenceTile = GetReferenceTile(x, y);
+
+                    // Check if the tile was deleted
+                    if (modifiedTile == null)
+                    {
+                        if (referenceTile != null)
+                        {
+                            Console.WriteLine($"Deleted tile: {referenceTile.TileIndex} from layer: {modifiedLayer.Id}");
+
+                            tiles.Add(new Diff.TileData()
+                            {
+                                EditType = EditType.Delete,
+                                TileIndex = referenceTile.TileIndex
+                            });
+                        }
+                        continue;
+                    }
+
+                    if (referenceTile == null || DoTilesDiffer(modifiedTile, referenceTile))
+                    {
+                        Console.WriteLine($"{(referenceTile == null ? EditType.Add : EditType.Replace)} tile: {modifiedTile.TileIndex} from layer: {modifiedLayer.Id}");
+
+                        // TODO: check for animated tiles
+                        tiles.Add(new Diff.TileData()
+                        {
+                            EditType = referenceTile == null ? EditType.Add : EditType.Replace,
+                            BlendMode = modifiedTile.BlendMode,
+                            OwningTileSheetId = modifiedTile.TileSheet.Id,
+                            TileIndex = modifiedTile.TileIndex,
+                            Properties = GetDifference(modifiedTile.Properties, referenceTile?.Properties)
+                        });
+                    }
+                }
+            }
+            return tiles.Count > 0 ? tiles.ToArray() : null;
         }
 
         private IPropertyCollection GetDifference(IPropertyCollection a, IPropertyCollection b, bool overwriteConflicting = true, bool nullIfEmpty = true)
@@ -192,8 +253,9 @@ namespace MapDiffGenerator
             {
                 // Only add it if it's not in the vanilla map properties or we changed the value.
                 // This way we only set things we actually changed.
+                // Need to do ToString() otherwise comparison always fails.
                 if (!b.ContainsKey(property.Key) ||
-                    (overwriteConflicting && b[property.Key] != property.Value))
+                    (overwriteConflicting && b[property.Key].ToString() != property.Value.ToString()))
                 {
                     properties.Add(property.Key, property.Value);
                 }
@@ -201,27 +263,35 @@ namespace MapDiffGenerator
             return (properties.Count > 0 || !nullIfEmpty) ? properties : null;
         }
 
+        private bool DoPropertiesDiffer(IPropertyCollection a, IPropertyCollection b)
+        {
+            if (a == null && b == null)
+                return false;
+            if ((a == null && b != null) || a != null && b == null)
+                return true;
+            if (a.Count != b.Count)
+                return true;
+            return GetDifference(a, b) != null;
+        }
+
         private bool DoTileSheetsDiffer(TileSheet a, TileSheet b)
         {
             return !(a.Id == b.Id && a.ImageSource == b.ImageSource && a.SheetSize == b.SheetSize && a.TileSize == b.TileSize);
         }
 
+        // Doesn't check tiles
         private bool DoLayersDiffer(Layer a, Layer b)
         {
-            // TODO: probably have to iter over each tile to see if they differ.
-            // We may as well do this while getting the tile diff data though since we have to iter over them all and check anyway.
-            if (a.Id == b.Id && a.LayerSize == b.LayerSize && a.TileSize == b.TileSize /*&& a.Tiles. == b.Tiles*/)
-            {
-
-                //for (int i = 0; i < a.Tiles.l)
-                return true;
-            }
-            return false;
+            return !(a.Id == b.Id && a.LayerSize == b.LayerSize && a.TileSize == b.TileSize);
         }
 
         private bool DoTilesDiffer(Tile a, Tile b)
         {
-            return !(a.Layer.Id == b.Layer.Id && a.TileIndex == b.TileIndex && a.BlendMode == b.BlendMode && a.TileIndexProperties == b.TileIndexProperties);
+            return a.Layer.Id != b.Layer.Id ||
+                   a.TileIndex != b.TileIndex ||
+                   a.BlendMode != b.BlendMode || 
+                   DoPropertiesDiffer(a.TileIndexProperties, b.TileIndexProperties) ||
+                   DoPropertiesDiffer(a.Properties, b.Properties);
         }
     }
 }
