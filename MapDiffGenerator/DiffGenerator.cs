@@ -88,6 +88,9 @@ namespace MapDiffGenerator
             public BlendMode BlendMode;
             public string OwningTileSheetId;
             public int TileIndex;
+
+            [JsonConverter(typeof(PropertyCollectionConverter))]
+            public IPropertyCollection TileIndexProperties;
         }
 
         internal class StaticTileData : TileData
@@ -97,7 +100,7 @@ namespace MapDiffGenerator
         internal class AnimatedTileData : TileData
         {
             public long FrameInterval;
-            public List<StaticTileData> Frames;
+            public StaticTileData[] Frames;
         }
 
         // Could add a version here or something if needed.
@@ -226,15 +229,39 @@ namespace MapDiffGenerator
                     {
                         Console.WriteLine($"{(referenceTile == null ? EditType.Add : EditType.Replace)} tile: {modifiedTile.TileIndex} from layer: {modifiedLayer.Id}");
 
-                        // TODO: check for animated tiles
-                        tiles.Add(new Diff.TileData()
+                        Diff.TileData newTile = null;
+                        if (modifiedTile is AnimatedTile animatedTile)
                         {
-                            EditType = referenceTile == null ? EditType.Add : EditType.Replace,
-                            BlendMode = modifiedTile.BlendMode,
-                            OwningTileSheetId = modifiedTile.TileSheet.Id,
-                            TileIndex = modifiedTile.TileIndex,
-                            Properties = GetDifference(modifiedTile.Properties, referenceTile?.Properties)
-                        });
+                            Diff.StaticTileData[] frames = new Diff.StaticTileData[animatedTile.TileFrames.Length];
+                            for (int i = 0; i < animatedTile.TileFrames.Length; ++i)
+                            {
+                                StaticTile copyFrame = animatedTile.TileFrames[i];
+                                frames[i] = new Diff.StaticTileData()
+                                {
+                                    BlendMode = copyFrame.BlendMode,
+                                    OwningTileSheetId = copyFrame.TileSheet.Id,
+                                    TileIndex = copyFrame.TileIndex,
+                                    Properties = copyFrame.Properties,
+                                    TileIndexProperties = copyFrame.TileIndexProperties
+                                };
+                            }
+
+                            newTile = new Diff.AnimatedTileData()
+                            {
+                                FrameInterval = animatedTile.FrameInterval,
+                                Frames = frames
+                            };
+                        }
+
+                        newTile = newTile ?? new Diff.TileData();
+                        newTile.EditType = referenceTile == null ? EditType.Add : EditType.Replace;
+                        newTile.BlendMode = modifiedTile.BlendMode;
+                        newTile.OwningTileSheetId = modifiedTile.TileSheet.Id;
+                        newTile.TileIndex = modifiedTile.TileIndex;
+                        newTile.Properties = GetDifference(modifiedTile.Properties, referenceTile?.Properties);
+                        newTile.TileIndexProperties = GetDifference(modifiedTile.TileIndexProperties, referenceTile?.TileIndexProperties);
+
+                        tiles.Add(newTile);
                     }
                 }
             }
