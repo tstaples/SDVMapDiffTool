@@ -11,6 +11,49 @@ using xTile.Layers;
 
 namespace MapDiffGenerator
 {
+    /*
+     * - xnb mods -> use my map editor mod
+     * - code mods -> add dependency since they have their own code
+     *  - MapEditor.dll
+     *      - use it like TBO does now:
+     *          - provide a tilesheet provider etc.
+     * 
+     * MapEditorMod/
+     *  Mods/
+     *      SomeFarmMod/
+     *          Config.json
+     *              {
+     *                  "map" : "Farm", // use this name to find the folder and diff data
+     *                  "spring_tilesheet" : "zspring_Farm_Tilesheet.png",
+     *                  ...
+     *              }
+     *              {
+     *                  "map" : "FarmHouse",
+     *                  "spring_tilesheet" : "zspring_FarmHouse_Tilesheet.png",
+     *                  ...
+     *              }
+     *          Farm/
+     *              Farm.json
+     *              zspring_Farm_Tilesheet.png
+     *              zspring_Fall_Tilesheet.png
+     *          FarmHouse/
+     *              FarmHouse.json
+     *              zFarmHouse_Tilesheet.png
+     *      SomeTownMod/
+     *          ...
+     *
+     * Modules:
+     *  - DiffGenerator.exe
+     *      - creates the diff
+     *  - MapEditor.dll
+     *      - common data structures
+     *          - diff
+     *          - tilesheet provider
+     *      - deserializing diff
+     *      - applying changes to a game location
+     *  - MapEditorMod.dll
+     *      - creates a tilesheet provider from each mod's config and applies the changes
+     */
     internal class DiffGenerator
     {
         private Map ModifiedMap;
@@ -24,8 +67,12 @@ namespace MapDiffGenerator
 
             Diff diff = new Diff();
             diff.Map = GetMapData();
-            // TEMP: Indented for viewing data in debug
-            string data = JsonConvert.SerializeObject(diff, Formatting.Indented);
+
+            Formatting formatting = Formatting.None;
+#if DEBUG
+            formatting = Formatting.Indented;
+#endif
+            string data = JsonConvert.SerializeObject(diff, formatting);
             File.WriteAllText("diff.json", data);
         }
 
