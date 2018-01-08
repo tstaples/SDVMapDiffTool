@@ -74,7 +74,7 @@ namespace MapDiffGenerator
             formatting = Formatting.Indented;
 #endif
             string data = JsonConvert.SerializeObject(diff, formatting);
-            File.WriteAllText("diff.json", data);
+            File.WriteAllText("../../../TestData/diff.json", data);
         }
 
         private Diff.MapData GetMapData()
@@ -102,7 +102,7 @@ namespace MapDiffGenerator
                         EditType = referenceTileSheet == null ? EditType.Add : EditType.Merge,
                         Properties = Utilities.GetDifference(tileSheet.Properties, referenceTileSheet?.Properties),
                         Id = tileSheet.Id,
-                        ImageSource = tileSheet.ImageSource, // May need to just get filename and ignore full path
+                        ImageSource = tileSheet.ImageSource, // This is just the filename.extension
                         SheetSize = tileSheet.SheetSize,
                         TileSize = tileSheet.SheetSize
                     };

@@ -6,7 +6,7 @@ using xTile.ObjectModel;
 
 namespace MapEditorFramework
 {
-    internal class PropertyCollectionConverter : JsonConverter
+    public class PropertyCollectionConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

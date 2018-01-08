@@ -5,6 +5,6 @@ namespace MapEditorFramework
 {
     public interface IMapEditor
     {
-        void Patch(Map targetMap, Diff mapDiff, IDisplayDevice displayDevice);
+        void Patch(Map targetMap, Diff mapDiff, ITileSheetProvider tileSheetProvider, IDisplayDevice displayDevice);
     }
 }

@@ -10,29 +10,30 @@ namespace MapEditorFramework
 {
     public class MapEditor : IMapEditor
     {
-        public void Patch(Map targetMap, Diff mapDiff, IDisplayDevice displayDevice)
+        public void Patch(Map targetMap, Diff mapDiff, ITileSheetProvider tileSheetProvider, IDisplayDevice displayDevice)
         {
             Utilities.MergeProperties(targetMap.Properties, mapDiff.Map.Properties);
 
             Diff.MapData mapData = mapDiff.Map;
 
             // Add tilesheets
-            MergeTileSheets(targetMap, mapData.TileSheets, displayDevice);
+            MergeTileSheets(targetMap, mapData.TileSheets, tileSheetProvider, displayDevice);
 
             MergeLayers(targetMap, mapData.Layers);
         }
 
-        private void MergeTileSheets(Map targetMap, Diff.TileSheetData[] tileSheets, IDisplayDevice displayDevice)
+        private void MergeTileSheets(Map targetMap, Diff.TileSheetData[] tileSheets, ITileSheetProvider tileSheetProvider, IDisplayDevice displayDevice)
         {
             if (tileSheets == null)
                 return;
 
             void AddTileSheet(Diff.TileSheetData tileSheetData)
             {
+                string imageSource = tileSheetProvider.GetTileSheetPath(tileSheetData.Id);
                 TileSheet tileSheet = new TileSheet(
                             id: tileSheetData.Id,
                             map: targetMap,
-                            imageSource: tileSheetData.ImageSource,
+                            imageSource: imageSource ?? tileSheetData.ImageSource,
                             sheetSize: tileSheetData.SheetSize,
                             tileSize: tileSheetData.TileSize
                         );
@@ -72,7 +73,7 @@ namespace MapEditorFramework
                     Visible = layerData.Visible,
                 };
                 layer.Properties.CopyFrom(layerData.Properties);
-                MergeTiles(layer, layer.Tiles, layerData.Tiles);
+                MergeTiles(layer, layerData.Tiles);
                 targetMap.InsertLayer(layer, index);
             }
 
@@ -82,7 +83,7 @@ namespace MapEditorFramework
                 layer.LayerSize = layerData.LayerSize;
                 layer.TileSize = layerData.TileSize;
                 Utilities.MergeProperties(layer.Properties, layerData.Properties);
-                MergeTiles(layer, layer.Tiles, layerData.Tiles);
+                MergeTiles(layer, layerData.Tiles);
             }
 
             for (int i = 0; i < layers.Length; ++i)
@@ -107,7 +108,7 @@ namespace MapEditorFramework
             }
         }
 
-        private void MergeTiles(Layer layer, TileArray tiles, Diff.TileData[] tilesData)
+        private void MergeTiles(Layer layer, Diff.TileData[] tilesData)
         {
             TileSheet GetTileSheetForTile(Diff.TileData tiledata)
             {
@@ -116,6 +117,12 @@ namespace MapEditorFramework
 
             foreach (Diff.TileData tileData in tilesData)
             {
+                if (tileData.EditType == EditType.Delete)
+                {
+                    layer.Tiles[tileData.X, tileData.Y] = null;
+                    continue;
+                }
+
                 Tile newTile = null;
                 if (tileData is Diff.AnimatedTileData animatedTileData)
                 {
@@ -127,10 +134,12 @@ namespace MapEditorFramework
 
                 newTile = newTile ?? new StaticTile(layer, GetTileSheetForTile(tileData), tileData.BlendMode, tileData.TileIndex);
                 // TODO: Should we merge these in case another mod has edited them?
-                newTile.Properties.CopyFrom(tileData.Properties);
-                newTile.TileIndexProperties.CopyFrom(tileData.TileIndexProperties);
+                if (tileData.Properties != null)
+                    newTile.Properties.CopyFrom(tileData.Properties);
+                if (tileData.TileIndexProperties != null)
+                    newTile.TileIndexProperties.CopyFrom(tileData.TileIndexProperties);
 
-                tiles[tileData.X, tileData.Y] = newTile;
+                layer.Tiles[tileData.X, tileData.Y] = newTile;
             }
         }
     }
