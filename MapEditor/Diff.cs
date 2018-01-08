@@ -3,7 +3,7 @@ using xTile.Tiles;
 using xTile.Dimensions;
 using Newtonsoft.Json;
 
-namespace MapDiffGenerator
+namespace MapEditor
 {
     /*
      * mod config will have:
@@ -35,7 +35,7 @@ namespace MapDiffGenerator
      *      - tile index properties
      *      - tile properties
      */
-    internal enum EditType
+    public enum EditType
     {
         Add,
         Merge,
@@ -43,9 +43,9 @@ namespace MapDiffGenerator
         Delete
     }
 
-    internal class Diff
+    public class Diff
     {
-        internal class DiffData
+        public class DiffData
         {
             public EditType EditType;
 
@@ -53,13 +53,13 @@ namespace MapDiffGenerator
             public IPropertyCollection Properties;
         }
 
-        internal class MapData : DiffData
+        public class MapData : DiffData
         {
             public TileSheetData[] TileSheets;
             public LayerData[] Layers;
         }
 
-        internal class TileSheetData : DiffData
+        public class TileSheetData : DiffData
         {
             public string Id;
             public string ImageSource;
@@ -67,7 +67,7 @@ namespace MapDiffGenerator
             public Size TileSize;
         }
 
-        internal class LayerData : DiffData
+        public class LayerData : DiffData
         {
             public string Id;
             public bool Visible;
@@ -76,7 +76,7 @@ namespace MapDiffGenerator
             public TileData[] Tiles;
         }
 
-        internal class TileData : DiffData
+        public class TileData : DiffData
         {
             public BlendMode BlendMode;
             public string OwningTileSheetId;
@@ -86,11 +86,11 @@ namespace MapDiffGenerator
             public IPropertyCollection TileIndexProperties;
         }
 
-        internal class StaticTileData : TileData
+        public class StaticTileData : TileData
         {
         }
 
-        internal class AnimatedTileData : TileData
+        public class AnimatedTileData : TileData
         {
             public long FrameInterval;
             public StaticTileData[] Frames;
