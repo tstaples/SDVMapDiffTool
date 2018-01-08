@@ -8,7 +8,7 @@ using xTile.ObjectModel;
 using xTile.Tiles;
 using Newtonsoft.Json;
 using xTile.Layers;
-using MapEditor;
+using MapEditorFramework;
 
 namespace MapDiffGenerator
 {

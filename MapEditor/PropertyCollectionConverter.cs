@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using xTile.ObjectModel;
 
-namespace MapEditor
+namespace MapEditorFramework
 {
     internal class PropertyCollectionConverter : JsonConverter
     {

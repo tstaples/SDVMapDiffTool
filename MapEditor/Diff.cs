@@ -3,7 +3,7 @@ using xTile.Tiles;
 using xTile.Dimensions;
 using Newtonsoft.Json;
 
-namespace MapEditor
+namespace MapEditorFramework
 {
     /*
      * mod config will have:

@@ -1,0 +1,14 @@
+﻿{
+    "Name": "MapEditor",
+    "Author": "tstaples (aka catman)",
+    "Version": {
+        "MajorVersion": 1,
+        "MinorVersion": 0,
+        "PatchVersion": 0,
+        "Build": null
+    },
+    "MinimumApiVersion": "2.0",
+    "Description": "Applies map edits through smapi to allow for compatibility.",
+    "UniqueID": "tstaples.MapEditor",
+    "EntryDll": "MapEditor.dll"
+}
