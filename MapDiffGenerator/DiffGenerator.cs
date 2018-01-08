@@ -82,7 +82,7 @@ namespace MapDiffGenerator
             return new Diff.MapData()
             {
                 EditType = EditType.Merge,
-                Properties = GetDifference(this.ModifiedMap.Properties, this.ReferenceMap.Properties),
+                Properties = Utilities.GetDifference(this.ModifiedMap.Properties, this.ReferenceMap.Properties),
                 TileSheets = GetTilesheetData(),
                 Layers = GetLayerData()
             };
@@ -100,7 +100,7 @@ namespace MapDiffGenerator
                     Diff.TileSheetData tileSheetData = new Diff.TileSheetData()
                     {
                         EditType = referenceTileSheet == null ? EditType.Add : EditType.Merge,
-                        Properties = GetDifference(tileSheet.Properties, referenceTileSheet?.Properties),
+                        Properties = Utilities.GetDifference(tileSheet.Properties, referenceTileSheet?.Properties),
                         Id = tileSheet.Id,
                         ImageSource = tileSheet.ImageSource, // May need to just get filename and ignore full path
                         SheetSize = tileSheet.SheetSize,
@@ -129,7 +129,7 @@ namespace MapDiffGenerator
                     layerData.Add(new Diff.LayerData()
                     {
                         EditType = referenceLayer == null ? EditType.Add : EditType.Merge,
-                        Properties = GetDifference(layer.Properties, referenceLayer?.Properties),
+                        Properties = Utilities.GetDifference(layer.Properties, referenceLayer?.Properties),
                         Id = layer.Id,
                         Visible = layer.Visible,
                         LayerSize = layer.LayerSize,
@@ -212,47 +212,16 @@ namespace MapDiffGenerator
                         newTile.BlendMode = modifiedTile.BlendMode;
                         newTile.OwningTileSheetId = modifiedTile.TileSheet.Id;
                         newTile.TileIndex = modifiedTile.TileIndex;
-                        newTile.Properties = GetDifference(modifiedTile.Properties, referenceTile?.Properties);
-                        newTile.TileIndexProperties = GetDifference(modifiedTile.TileIndexProperties, referenceTile?.TileIndexProperties);
+                        newTile.X = x;
+                        newTile.Y = y;
+                        newTile.Properties = Utilities.GetDifference(modifiedTile.Properties, referenceTile?.Properties);
+                        newTile.TileIndexProperties = Utilities.GetDifference(modifiedTile.TileIndexProperties, referenceTile?.TileIndexProperties);
 
                         tiles.Add(newTile);
                     }
                 }
             }
             return tiles.Count > 0 ? tiles.ToArray() : null;
-        }
-
-        private IPropertyCollection GetDifference(IPropertyCollection a, IPropertyCollection b, bool overwriteConflicting = true, bool nullIfEmpty = true)
-        {
-            if (b == null)
-            {
-                return a;
-            }
-
-            IPropertyCollection properties = new PropertyCollection();
-            foreach (var property in a)
-            {
-                // Only add it if it's not in the vanilla map properties or we changed the value.
-                // This way we only set things we actually changed.
-                // Need to do ToString() otherwise comparison always fails.
-                if (!b.ContainsKey(property.Key) ||
-                    (overwriteConflicting && b[property.Key].ToString() != property.Value.ToString()))
-                {
-                    properties.Add(property.Key, property.Value);
-                }
-            }
-            return (properties.Count > 0 || !nullIfEmpty) ? properties : null;
-        }
-
-        private bool DoPropertiesDiffer(IPropertyCollection a, IPropertyCollection b)
-        {
-            if (a == null && b == null)
-                return false;
-            if ((a == null && b != null) || a != null && b == null)
-                return true;
-            if (a.Count != b.Count)
-                return true;
-            return GetDifference(a, b) != null;
         }
 
         private bool DoTileSheetsDiffer(TileSheet a, TileSheet b)
@@ -271,8 +240,8 @@ namespace MapDiffGenerator
             return a.Layer.Id != b.Layer.Id ||
                    a.TileIndex != b.TileIndex ||
                    a.BlendMode != b.BlendMode || 
-                   DoPropertiesDiffer(a.TileIndexProperties, b.TileIndexProperties) ||
-                   DoPropertiesDiffer(a.Properties, b.Properties);
+                   Utilities.DoPropertiesDiffer(a.TileIndexProperties, b.TileIndexProperties) ||
+                   Utilities.DoPropertiesDiffer(a.Properties, b.Properties);
         }
     }
 }

@@ -7,7 +7,7 @@
     <ProjectGuid>{A4CF6C44-11F0-43CC-A907-B11996231D70}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MapEditorMod</RootNamespace>
+    <RootNamespace>MapEditor</RootNamespace>
     <AssemblyName>MapEditorMod</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

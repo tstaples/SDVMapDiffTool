@@ -81,6 +81,8 @@ namespace MapEditorFramework
             public BlendMode BlendMode;
             public string OwningTileSheetId;
             public int TileIndex;
+            public int X;
+            public int Y;
 
             [JsonConverter(typeof(PropertyCollectionConverter))]
             public IPropertyCollection TileIndexProperties;
