@@ -171,7 +171,9 @@ namespace MapDiffGenerator
                             tiles.Add(new Diff.TileData()
                             {
                                 EditType = EditType.Delete,
-                                TileIndex = referenceTile.TileIndex
+                                TileIndex = referenceTile.TileIndex,
+                                X = x,
+                                Y = y
                             });
                         }
                         continue;
