@@ -69,11 +69,7 @@ namespace MapDiffGenerator
             Diff diff = new Diff();
             diff.Map = GetMapData();
 
-            Formatting formatting = Formatting.None;
-#if DEBUG
-            formatting = Formatting.Indented;
-#endif
-            string data = JsonConvert.SerializeObject(diff, formatting);
+            string data = JsonConvert.SerializeObject(diff, new SerializationSettings());
             File.WriteAllText("../../../TestData/diff.json", data);
         }
 

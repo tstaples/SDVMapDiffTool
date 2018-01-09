@@ -237,56 +237,52 @@
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
-            "TileIndex": 170,
+            "OwningTileSheetId": null,
+            "TileIndex": 537,
             "X": 12,
             "Y": 56,
             "TileIndexProperties": null,
-            "EditType": 2,
+            "EditType": 3,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
-            "TileIndex": 171,
+            "OwningTileSheetId": null,
+            "TileIndex": 537,
             "X": 13,
             "Y": 56,
             "TileIndexProperties": null,
-            "EditType": 2,
+            "EditType": 3,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
-            "TileIndex": 172,
+            "OwningTileSheetId": null,
+            "TileIndex": 537,
             "X": 14,
             "Y": 56,
-            "TileIndexProperties": {
-              "Passable": "t"
-            },
-            "EditType": 2,
+            "TileIndexProperties": null,
+            "EditType": 3,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
-            "TileIndex": 173,
+            "OwningTileSheetId": null,
+            "TileIndex": 537,
             "X": 15,
             "Y": 56,
-            "TileIndexProperties": {
-              "Passable": "t"
-            },
-            "EditType": 2,
+            "TileIndexProperties": null,
+            "EditType": 3,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
-            "TileIndex": 174,
+            "OwningTileSheetId": null,
+            "TileIndex": 537,
             "X": 16,
             "Y": 56,
             "TileIndexProperties": null,
-            "EditType": 2,
+            "EditType": 3,
             "Properties": null
           },
           {
@@ -1558,6 +1554,7 @@
             "Properties": null
           },
           {
+            "$type": "MapEditorFramework.Diff+AnimatedTileData, MapEditorFramework",
             "FrameInterval": 250,
             "Frames": [
               {
@@ -1631,6 +1628,7 @@
             "Properties": null
           },
           {
+            "$type": "MapEditorFramework.Diff+AnimatedTileData, MapEditorFramework",
             "FrameInterval": 250,
             "Frames": [
               {
@@ -1787,52 +1785,56 @@
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": null,
-            "TileIndex": 1606,
+            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
+            "TileIndex": 170,
             "X": 12,
             "Y": 56,
             "TileIndexProperties": null,
-            "EditType": 3,
+            "EditType": 2,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": null,
-            "TileIndex": 1607,
+            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
+            "TileIndex": 171,
             "X": 13,
             "Y": 56,
             "TileIndexProperties": null,
-            "EditType": 3,
+            "EditType": 2,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": null,
-            "TileIndex": 1608,
+            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
+            "TileIndex": 172,
             "X": 14,
             "Y": 56,
-            "TileIndexProperties": null,
-            "EditType": 3,
+            "TileIndexProperties": {
+              "Passable": "t"
+            },
+            "EditType": 2,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": null,
-            "TileIndex": 1609,
+            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
+            "TileIndex": 173,
             "X": 15,
             "Y": 56,
-            "TileIndexProperties": null,
-            "EditType": 3,
+            "TileIndexProperties": {
+              "Passable": "t"
+            },
+            "EditType": 2,
             "Properties": null
           },
           {
             "BlendMode": 0,
-            "OwningTileSheetId": null,
-            "TileIndex": 1610,
+            "OwningTileSheetId": "zpathtotalbathhouseoverhaulexterior",
+            "TileIndex": 174,
             "X": 16,
             "Y": 56,
             "TileIndexProperties": null,
-            "EditType": 3,
+            "EditType": 2,
             "Properties": null
           },
           {
@@ -1846,6 +1848,7 @@
             "Properties": null
           },
           {
+            "$type": "MapEditorFramework.Diff+AnimatedTileData, MapEditorFramework",
             "FrameInterval": 250,
             "Frames": [
               {
@@ -1919,6 +1922,7 @@
             "Properties": null
           },
           {
+            "$type": "MapEditorFramework.Diff+AnimatedTileData, MapEditorFramework",
             "FrameInterval": 250,
             "Frames": [
               {

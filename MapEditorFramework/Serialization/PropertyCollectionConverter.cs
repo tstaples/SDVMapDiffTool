@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MapEditorFramework
             {
                 serializer.Populate(reader, properties);
             }
-            catch (JsonSerializationException ex)
+            catch (JsonSerializationException)
             {
                 // The collection was null.
                 return null;

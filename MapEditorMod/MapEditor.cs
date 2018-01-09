@@ -7,6 +7,7 @@ using System.IO;
 using xTile;
 using StardewValley;
 using StardewModdingAPI.Events;
+using Newtonsoft.Json;
 
 namespace MapEditor
 {
@@ -29,7 +30,9 @@ namespace MapEditor
             const string TileSheetId = "zpathtotalbathhouseoverhaulexterior";
 
             string diffPath = Path.Combine(Helper.DirectoryPath, "TestData/diff.json");
-            Diff mapDiff = this.Helper.ReadJsonFile<Diff>(diffPath);
+            //Diff mapDiff = this.Helper.ReadJsonFile<Diff>(diffPath);
+            string data = File.ReadAllText(diffPath);
+            Diff mapDiff = JsonConvert.DeserializeObject<Diff>(data, new SerializationSettings());
 
             Map targetMap = Game1.getLocationFromName("Railroad").map;
 
