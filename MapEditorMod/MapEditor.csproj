@@ -53,13 +53,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MapEditor\MapEditorFramework.csproj">
+    <None Include="manifest.json" />
+  </ItemGroup>
+  <!--<ItemGroup>
+    <Content Include="..\TestData\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <InProject>false</InProject>
+    </Content>
+  </ItemGroup>-->
+  <ItemGroup>
+    <ProjectReference Include="..\MapEditorFramework\MapEditorFramework.csproj">
       <Project>{e75a8314-6d6d-42d5-886a-d99c556d4f44}</Project>
       <Name>MapEditorFramework</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="manifest.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Pathoschild.Stardew.ModBuildConfig.2.0.2\build\Pathoschild.Stardew.ModBuildConfig.targets" Condition="Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.2.0.2\build\Pathoschild.Stardew.ModBuildConfig.targets')" />

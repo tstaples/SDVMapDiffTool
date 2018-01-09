@@ -60,7 +60,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MapEditor\MapEditorFramework.csproj">
+    <ProjectReference Include="..\MapEditorFramework\MapEditorFramework.csproj">
       <Project>{e75a8314-6d6d-42d5-886a-d99c556d4f44}</Project>
       <Name>MapEditorFramework</Name>
     </ProjectReference>

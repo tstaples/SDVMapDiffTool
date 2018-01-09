@@ -12,62 +12,17 @@ using xTile.Display;
 using Microsoft.Xna.Framework.Graphics;
 using xTile.Dimensions;
 using xTile.Tiles;
+using Newtonsoft.Json.Converters;
 
 namespace MapEditorMod
 {
-    internal class DisplayDevice : IDisplayDevice
+    public class TestTileSheetGroup : SeasonalTileSheetGroup
     {
-        private ITileSheetProvider TileSheetProvider;
-        private IModHelper Helper;
+        public IModHelper Helper;
 
-        public DisplayDevice(ITileSheetProvider tsProvider, IModHelper helper)
+        public override string GetTileSheetPath()
         {
-            this.TileSheetProvider = tsProvider;
-            this.Helper = helper;
-        }
-
-        public void BeginScene(SpriteBatch b)
-        {
-            Game1.mapDisplayDevice.BeginScene(b);
-        }
-
-        public void DisposeTileSheet(TileSheet tileSheet)
-        {
-            Game1.mapDisplayDevice.DisposeTileSheet(tileSheet);
-        }
-
-        public void DrawTile(Tile tile, Location location, float layerDepth)
-        {
-            Game1.mapDisplayDevice.DrawTile(tile, location, layerDepth);
-        }
-
-        public void EndScene()
-        {
-            Game1.mapDisplayDevice.EndScene();
-        }
-
-        public void LoadTileSheet(TileSheet tileSheet)
-        {
-            string path = this.TileSheetProvider.GetTileSheetPath(tileSheet.Id);
-            if (path == null)
-            {
-                Game1.mapDisplayDevice.LoadTileSheet(tileSheet);
-                return;
-            }
-
-            Texture2D texture = this.Helper.Content.Load<Texture2D>(path);
-            if (Game1.mapDisplayDevice is XnaDisplayDevice xnaDisplayDevice)
-            {
-                var tileSheetTextures = this.Helper.Reflection.GetField<Dictionary<TileSheet, Texture2D>>(xnaDisplayDevice, "m_tileSheetTextures");
-                var value = tileSheetTextures.GetValue();
-                value.Add(tileSheet, texture);
-                tileSheetTextures.SetValue(value);
-            }
-        }
-
-        public void SetClippingRegion(Rectangle clippingRegion)
-        {
-            Game1.mapDisplayDevice.SetClippingRegion(clippingRegion);
+            return this.Helper.Content.GetActualAssetKey(base.GetTileSheetPath());
         }
     }
 
@@ -90,13 +45,33 @@ namespace MapEditorMod
 
             string diffPath = Path.Combine(Helper.DirectoryPath, "TestData/diff.json");
             string data = File.ReadAllText(diffPath);
-            Diff mapDiff = JsonConvert.DeserializeObject<Diff>(data);
-            //Diff mapDiff = this.Helper.ReadJsonFile<Diff>("TestData/diff.json");
+
+            /////////////////////////////////////////////////////////////////////////////////
+            // BEGIN CONFUSION
+            /////////////////////////////////////////////////////////////////////////////////
+            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                Converters = new List<JsonConverter> { new StringEnumConverter() }
+            };
+
+            // Works
+            Diff mapDiff = JsonConvert.DeserializeObject<Diff>(data, settings);
+
+            // Doesn't work
+            //string jsonPath = Path.Combine(/*this.Helper.DirectoryPath,*/ "TestData", "diff.json");
+            //Diff mapDiff = this.Helper.ReadJsonFile<Diff>(jsonPath);
+
+            /////////////////////////////////////////////////////////////////////////////////
+            // END CONFUSION
+            /////////////////////////////////////////////////////////////////////////////////
 
             Map targetMap = Game1.getLocationFromName("Railroad").map;
 
-            SeasonalTileSheetGroup tileSheetGroup = new SeasonalTileSheetGroup()
+            TestTileSheetGroup tileSheetGroup = new TestTileSheetGroup()
             {
+                Helper = this.Helper,
                 UniqueId = TileSheetId,
                 TileSheetPaths = Enum.GetValues(typeof(Season))
                 .Cast<Season>()
@@ -106,8 +81,7 @@ namespace MapEditorMod
 
             IMapEditor mapEditor = new MapEditor();
             var tileSheetProvider = new TileSheetProvider(tileSheetGroup);
-            var displayDevice = new DisplayDevice(tileSheetProvider, this.Helper);
-            mapEditor.Patch(targetMap, mapDiff, tileSheetProvider, displayDevice);
+            mapEditor.Patch(targetMap, mapDiff, tileSheetProvider, Game1.mapDisplayDevice);
         }
     }
 }

@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapDiffGenerator", "MapDiffGenerator\MapDiffGenerator.csproj", "{84D98FF7-6000-44A7-8201-7869E0CDAB76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditorFramework", "MapEditor\MapEditorFramework.csproj", "{E75A8314-6D6D-42D5-886A-D99C556D4F44}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor", "MapEditorMod\MapEditor.csproj", "{A4CF6C44-11F0-43CC-A907-B11996231D70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditorFramework", "MapEditorFramework\MapEditorFramework.csproj", "{E75A8314-6D6D-42D5-886A-D99C556D4F44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{84D98FF7-6000-44A7-8201-7869E0CDAB76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84D98FF7-6000-44A7-8201-7869E0CDAB76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84D98FF7-6000-44A7-8201-7869E0CDAB76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4CF6C44-11F0-43CC-A907-B11996231D70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4CF6C44-11F0-43CC-A907-B11996231D70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CF6C44-11F0-43CC-A907-B11996231D70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4CF6C44-11F0-43CC-A907-B11996231D70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75A8314-6D6D-42D5-886A-D99C556D4F44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
