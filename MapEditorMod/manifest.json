@@ -7,7 +7,7 @@
         "PatchVersion": 0,
         "Build": null
     },
-    "MinimumApiVersion": "2.0",
+    "MinimumApiVersion": "2.4",
     "Description": "Applies map edits through smapi to allow for compatibility.",
     "UniqueID": "tstaples.MapEditor",
     "EntryDll": "MapEditor.dll"
